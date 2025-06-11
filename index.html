@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Mini Pokladna</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; margin: 20px; }
+    .item { margin: 10px; }
+    button { padding: 10px 20px; font-size: 16px; margin: 5px; }
+    #total { font-size: 24px; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h1>Mini Pokladna</h1>
+  <div id="items"></div>
+  <div id="total">Celkem: 0 Kč</div>
+  <button onclick="reset()">Vymazat</button>
+
+  <script>
+    const items = [
+      { name: "Voda", price: 25 },
+      { name: "Chléb", price: 30 },
+      { name: "Máslo", price: 50 },
+      { name: "Mléko", price: 20 },
+      { name: "Sýr", price: 60 },
+      { name: "Jablko", price: 10 },
+      { name: "Pivo", price: 35 },
+      { name: "Káva", price: 40 },
+      { name: "Čaj", price: 25 },
+      { name: "Cukr", price: 18 }
+    ];
+
+    let total = 0;
+
+    const itemsDiv = document.getElementById("items");
+    const totalDiv = document.getElementById("total");
+
+    items.forEach(item => {
+      const btn = document.createElement("button");
+      btn.innerText = `${item.name} (${item.price} Kč)`;
+      btn.onclick = () => {
+        total += item.price;
+        totalDiv.innerText = `Celkem: ${total} Kč`;
+      };
+      itemsDiv.appendChild(btn);
+    });
+
+    function reset() {
+      total = 0;
+      totalDiv.innerText = `Celkem: ${total} Kč`;
+    }
+  </script>
+</body>
+</html>
