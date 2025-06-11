@@ -2,11 +2,45 @@
 <html>
 <head>
   <title>Mini Pokladna</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body { font-family: sans-serif; text-align: center; margin: 20px; }
-    .item { margin: 10px; }
-    button { padding: 10px 20px; font-size: 16px; margin: 5px; }
-    #total { font-size: 24px; margin-top: 20px; }
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      margin: 20px;
+    }
+    button {
+      padding: 20px 30px;
+      font-size: 20px;
+      margin: 10px;
+      border-radius: 12px;
+      border: none;
+      background-color: #4CAF50;
+      color: white;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    #total {
+      font-size: 28px;
+      margin-top: 30px;
+    }
+    #summary {
+      margin-top: 20px;
+      font-size: 20px;
+      text-align: left;
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    ul {
+      padding: 0;
+      list-style-type: none;
+    }
+    li {
+      padding: 6px 0;
+    }
   </style>
 </head>
 <body>
@@ -14,6 +48,11 @@
   <div id="items"></div>
   <div id="total">Celkem: 0 Kč</div>
   <button onclick="reset()">Vymazat</button>
+
+  <div id="summary">
+    <h3>Vybrané položky:</h3>
+    <ul id="selectedItems"></ul>
+  </div>
 
   <script>
     const items = [
@@ -32,9 +71,11 @@
     ];
 
     let total = 0;
+    const selectedItems = {};
 
     const itemsDiv = document.getElementById("items");
     const totalDiv = document.getElementById("total");
+    const selectedItemsList = document.getElementById("selectedItems");
 
     items.forEach(item => {
       const btn = document.createElement("button");
@@ -42,13 +83,35 @@
       btn.onclick = () => {
         total += item.price;
         totalDiv.innerText = `Celkem: ${total} Kč`;
+
+        if (selectedItems[item.name]) {
+          selectedItems[item.name].count++;
+        } else {
+          selectedItems[item.name] = { price: item.price, count: 1 };
+        }
+
+        updateList();
       };
       itemsDiv.appendChild(btn);
     });
 
+    function updateList() {
+      selectedItemsList.innerHTML = "";
+      for (let name in selectedItems) {
+        const li = document.createElement("li");
+        const item = selectedItems[name];
+        li.textContent = `${name} ×${item.count} (${item.count * item.price} Kč)`;
+        selectedItemsList.appendChild(li);
+      }
+    }
+
     function reset() {
       total = 0;
-      totalDiv.innerText = `Celkem: ${total} Kč`;
+      totalDiv.innerText = `Celkem: 0 Kč`;
+      for (let name in selectedItems) {
+        delete selectedItems[name];
+      }
+      updateList();
     }
   </script>
 </body>
